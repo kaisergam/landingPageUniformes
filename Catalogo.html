@@ -337,7 +337,7 @@
         imageMenu.appendChild(itemName);
         imageMenu.appendChild(itemDescription);
 
-        // Agrega la clase 'show' para activar la transición de opacidad y altura
+
         imageMenu.classList.add("show");
       }
       function showImageMenu(item) {
@@ -350,12 +350,11 @@
         itemDescription.textContent =
           "Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
-        // Agrega el botón de cierre al menú desplegable
+
         closeBtn.innerHTML = "&times;";
         closeBtn.id = "imageMenuCloseBtn";
         closeBtn.onclick = hideImageMenu;
 
-        // Limpia el contenido anterior antes de agregar nuevos elementos
         imageMenu.innerHTML = "";
 
         imageMenu.appendChild(closeBtn);
@@ -363,7 +362,6 @@
         imageMenu.appendChild(itemDescription);
         imageMenu.style.display = "block";
 
-        // Agrega la clase 'show' para activar la transición de opacidad y altura
         imageMenu.classList.add("show");
       }
 
@@ -372,7 +370,6 @@
         imageMenu.style.display = "none";
         imageMenu.classList.remove("show");
 
-        // Elimina el botón de cierre al ocultar el menú
         const closeBtn = document.getElementById("imageMenuCloseBtn");
         if (closeBtn) {
           closeBtn.remove();
@@ -403,7 +400,6 @@
           size: "S",
           name: "Prenda 4",
         },
-        // Agrega más datos según sea necesario
       ];
 
       function createCatalogItem(item) {
