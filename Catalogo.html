@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo</title>
+    <script
+      src="https://kit.fontawesome.com/8517d4d55b.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .dropdown {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        width: 30%;
+        max-width: 300px;
+        border-radius: 10px;
+        top: 27%;
+        left: 60%;
+        transform: translateX(-50%);
+      }
+
+      nav {
+        background-color: #2c3e50;
+        padding: 0.5em;
+        text-align: center;
+      }
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5em 1em;
+        margin: 0 1em;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        position: relative;
+      }
+
+      nav a:hover {
+        background-color: #f39c12;
+      }
+
+      .dropdown-content {
+        padding: 1em;
+      }
+
+      .dropdown-content h2 {
+        color: #333;
+      }
+
+      .dropdown-content p {
+        color: #333;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f7fd;
+        color: #333;
+      }
+
+      header {
+        background-color: #3498db;
+        color: #fff;
+        padding: 1em;
+        text-align: center;
+      }
+
+      section {
+        padding: 2em;
+        text-align: center;
+      }
+
+      h1,
+      h2 {
+        color: #333;
+      }
+
+      footer {
+        background-color: #3498db;
+        color: #fff;
+        text-align: center;
+        padding: 1em;
+        width: 100%;
+        display: none;
+      }
+
+      .float-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #25d366;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        padding: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .catalog-table {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .catalog-item {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .catalog-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .catalog-item:hover::before {
+        opacity: 1;
+      }
+
+      .catalog-item img {
+        max-width: 100%;
+        height: auto;
+        z-index: 1;
+        transition: transform 0.3s ease;
+      }
+
+      .catalog-item:hover img {
+        transform: scale(1.1);
+        opacity: 0.9;
+      }
+
+      .search-bar {
+        margin-top: 20px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 10px;
+        width: 300px;
+        border-radius: 10px;
+        border: 1px solid #3498db;
+      }
+
+      select {
+        padding: 8px;
+        margin-left: 10px;
+        border-radius: 5px;
+        border: 1px solid #3498db;
+        background-color: #fff;
+        color: #333;
+      }
+
+      .item-name {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 8px 8px 12px rgba(0, 0, 0, 0.8);
+
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .catalog-item:hover .item-name {
+        opacity: 1;
+      }
+      #imageMenu {
+        display: none;
+        position: fixed;
+        background-color: #fff;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        height: 80%;
+        width: 70%;
+        max-width: 900px;
+        max-height: 900px;
+        border-radius: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        text-align: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+      }
+      #imageMenu.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      #imageMenuCloseBtn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Catálogo</h1>
+    </header>
+
+    <nav>
+      <a href="Index.html" target="_blank">Inicio</a>
+      <a href="https://wa.me/541144748423" target="_blank">Contacto</a>
+      <a href="#" onclick="toggleMenu()">Sobre nosotros</a>
+      <div id="sobre-nosotros-menu" class="dropdown">
+        <div class="dropdown-content">
+          <h2>Nuestra Historia</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+            pellentesque convallis ligula, auctor fermentum odio euismod non.
+            Nullam ultricies massa a metus dapibus, vel fermentum libero
+            aliquet. Fusce tincidunt sapien vitae enim tincidunt, non accumsan
+            odio tincidunt.
+          </p>
+          <h2>Nuestra Misión</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+            pellentesque convallis ligula, auctor fermentum odio euismod non.
+            Nullam ultricies massa a metus dapibus, vel fermentum libero
+            aliquet. Fusce tincidunt sapien vitae enim tincidunt, non accumsan
+            odio tincidunt.
+          </p>
+        </div>
+      </div>
+    </nav>
+
+    <section class="content">
+      <h2>Bienvenido a nuestra tienda de uniformes escolares</h2>
+      <p>
+        Descubre nuestra amplia variedad de uniformes de alta calidad para
+        estudiantes.
+      </p>
+
+      <div class="search-bar">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Buscar por nombre"
+          oninput="filterCatalog()"
+        />
+        <select id="genderFilter" onchange="filterCatalog()">
+          <option value="">Todos los géneros</option>
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+        </select>
+        <select id="sizeFilter" onchange="filterCatalog()">
+          <option value="">Todos los tamaños</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+        </select>
+      </div>
+
+      <div class="catalog-table" id="catalog">
+        <!-- Aquí se cargarán las imágenes dinámicamente -->
+      </div>
+
+      <div id="imageMenu" class="dropdown">
+        <div class="dropdown-content">
+          <h2 id="itemName"></h2>
+          <p id="itemDescription"></p>
+        </div>
+      </div>
+    </section>
+
+    <button class="float-button" onclick="accionDelBoton()">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
+
+    <footer id="footer">
+      <p>&copy; 2023 Uniformes Escolares - Text</p>
+    </footer>
+
+    <script>
+      function accionDelBoton() {
+        window.open("https://wa.me/541144748423", "_blank");
+      }
+
+      function toggleMenu() {
+        var sobreNosotrosMenu = document.getElementById("sobre-nosotros-menu");
+        sobreNosotrosMenu.style.display =
+          sobreNosotrosMenu.style.display === "none" ||
+          sobreNosotrosMenu.style.display === ""
+            ? "block"
+            : "none";
+      }
+      function showImageMenu(item) {
+        const imageMenu = document.getElementById("imageMenu");
+        const itemName = document.getElementById("itemName");
+        const itemDescription = document.getElementById("itemDescription");
+        const closeBtn = document.createElement("span");
+
+        itemName.textContent = item.name;
+        itemDescription.textContent =
+          "Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
+        // Agrega el botón de cierre al menú desplegable
+        closeBtn.innerHTML = "&times;";
+        closeBtn.id = "imageMenuCloseBtn";
+        closeBtn.onclick = hideImageMenu;
+
+        // Limpia el contenido anterior antes de agregar nuevos elementos
+        imageMenu.innerHTML = "";
+
+        imageMenu.appendChild(closeBtn);
+        imageMenu.appendChild(itemName);
+        imageMenu.appendChild(itemDescription);
+
+        // Agrega la clase 'show' para activar la transición de opacidad y altura
+        imageMenu.classList.add("show");
+      }
+      function showImageMenu(item) {
+        const imageMenu = document.getElementById("imageMenu");
+        const itemName = document.getElementById("itemName");
+        const itemDescription = document.getElementById("itemDescription");
+        const closeBtn = document.createElement("span");
+
+        itemName.textContent = item.name;
+        itemDescription.textContent =
+          "Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
+        // Agrega el botón de cierre al menú desplegable
+        closeBtn.innerHTML = "&times;";
+        closeBtn.id = "imageMenuCloseBtn";
+        closeBtn.onclick = hideImageMenu;
+
+        // Limpia el contenido anterior antes de agregar nuevos elementos
+        imageMenu.innerHTML = "";
+
+        imageMenu.appendChild(closeBtn);
+        imageMenu.appendChild(itemName);
+        imageMenu.appendChild(itemDescription);
+        imageMenu.style.display = "block";
+
+        // Agrega la clase 'show' para activar la transición de opacidad y altura
+        imageMenu.classList.add("show");
+      }
+
+      function hideImageMenu() {
+        const imageMenu = document.getElementById("imageMenu");
+        imageMenu.style.display = "none";
+        imageMenu.classList.remove("show");
+
+        // Elimina el botón de cierre al ocultar el menú
+        const closeBtn = document.getElementById("imageMenuCloseBtn");
+        if (closeBtn) {
+          closeBtn.remove();
+        }
+      }
+      const catalogData = [
+        {
+          image: "Prenda1.jpg",
+          gender: "masculino",
+          size: "M",
+          name: "Prenda 1",
+        },
+        {
+          image: "Prenda2.jpg",
+          gender: "femenino",
+          size: "L",
+          name: "Prenda 2",
+        },
+        {
+          image: "Prenda3.jpg",
+          gender: "masculino",
+          size: "XL",
+          name: "Prenda 3",
+        },
+        {
+          image: "Prenda4.jpg",
+          gender: "masculino",
+          size: "S",
+          name: "Prenda 4",
+        },
+        // Agrega más datos según sea necesario
+      ];
+
+      function createCatalogItem(item) {
+        const catalogItem = document.createElement("div");
+        catalogItem.classList.add("catalog-item");
+
+        const img = document.createElement("img");
+        img.src = item.image;
+
+        img.addEventListener("click", function () {
+          showImageMenu(item);
+        });
+
+        catalogItem.appendChild(img);
+
+        const itemName = document.createElement("div");
+        itemName.classList.add("item-name");
+        itemName.textContent = item.name;
+        catalogItem.appendChild(itemName);
+
+        return catalogItem;
+      }
+
+      function filterCatalog() {
+        const searchTerm = document
+          .querySelector(".search-input")
+          .value.toLowerCase();
+        const genderFilter = document
+          .getElementById("genderFilter")
+          .value.toLowerCase();
+        const sizeFilter = document
+          .getElementById("sizeFilter")
+          .value.toLowerCase();
+
+        const catalogContainer = document.getElementById("catalog");
+        catalogContainer.innerHTML = "";
+
+        const filteredCatalog = catalogData.filter(
+          (item) =>
+            (item.gender.toLowerCase().includes(genderFilter) ||
+              genderFilter === "") &&
+            (item.size.toLowerCase().includes(sizeFilter) ||
+              sizeFilter === "") &&
+            Object.values(item).some((value) =>
+              value.toLowerCase().includes(searchTerm)
+            )
+        );
+
+        filteredCatalog.forEach((item) => {
+          const catalogItem = createCatalogItem(item);
+          catalogContainer.appendChild(catalogItem);
+        });
+      }
+
+      filterCatalog("");
+    </script>
+  </body>
+</html>
